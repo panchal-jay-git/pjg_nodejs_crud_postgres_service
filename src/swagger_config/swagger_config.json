@@ -1,0 +1,339 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Nodejs CRUD with Postgres",
+      "description": "Basic CRUD operations using Node.js and Postgres as the database"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8001/api/v1",
+        "description": "Local Server"
+      }
+    ],
+    "security": [
+      {
+        "ApiKeyAuth": []
+      },
+      {
+        "BearerAuth": []
+      }
+    ],
+    "paths": {
+      "/employee": {
+        "get": {
+          "summary": "Get specific employee data by ID",
+          "description": "User can retrieve employee data using the *id*. The `id` should be provided as a query parameter.",
+          "operationId": "GetEmployee",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Employee ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [
+            {
+              "ApiKeyAuth": []
+            }
+          ],
+          "tags": [
+            "Employee"
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfully retrieved employee data.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "statusCode": {
+                        "type": "string",
+                        "example": "200"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Employee retrieved successfully"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Employee"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "403": {
+              "$ref": "#/components/responses/Forbidden"
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "An error occurred while retrieving the employee"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Add or update employee data",
+          "description": "User can add or update employee data. If an employee with the specified *id* exists, the record is updated; otherwise, a new record is created.",
+          "operationId": "addOrUpdateEmployee",
+          "security": [
+            {
+              "ApiKeyAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Employee"
+                }
+              }
+            }
+          },
+          "tags": [
+            "Employee"
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfully added or updated employee data.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "statusCode": {
+                        "type": "string",
+                        "example": "200"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Employee added or updated successfully"
+                      },
+                      "data": {
+                        "$ref": "#/components/schemas/Employee"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "403": {
+              "$ref": "#/components/responses/Forbidden"
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "An error occurred while adding or updating the employee"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete specific employee data",
+          "description": "User can delete employee data by *id*. The `id` should be provided as a query parameter.",
+          "operationId": "DeleteEmployee",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Employee ID",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "security": [
+            {
+              "ApiKeyAuth": []
+            }
+          ],
+          "tags": [
+            "Employee"
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Employee deleted successfully"
+                      },
+                      "data": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "403": {
+              "$ref": "#/components/responses/Forbidden"
+            },
+            "404": {
+              "$ref": "#/components/responses/NotFound"
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "An error occurred while deleting the employee"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "responses": {
+        "Forbidden": {
+          "description": "Request Parameter Validation Error",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "NotFound": {
+          "description": "Requested Data/URL not found.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotFound"
+              }
+            }
+          }
+        }
+      },
+      "schemas": {
+        "Employee": {
+          "type": "object",
+          "properties": {
+            "firstname": {
+              "type": "string"
+            },
+            "lastname": {
+              "type": "string"
+            },
+            "confirmStatus": {
+              "type": "string"
+            },
+            "department": {
+              "type": "string"
+            },
+            "designation": {
+              "type": "string"
+            },
+            "capablity": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "employeeId": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "reportingTo": {
+              "type": "string"
+            },
+            "joiningDate": {
+              "type": "string"
+            },
+            "confirmationDate": {
+              "type": "string"
+            },
+            "relievingDate": {
+              "type": "string"
+            }
+
+          },
+          "required": ["firstname", "lastname","designation","capablity","email","status","employeeId","reportingTo", "joiningDate"]
+        },
+        "Error": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": ["statusCode", "message"]
+        },
+        "NotFound": {
+          "type": "object",
+          "properties": {
+            "statusCode": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": ["statusCode", "message", "url"]
+        }
+      },
+      "securitySchemes": {
+        "ApiKeyAuth": {
+          "type": "apiKey",
+          "in": "header",
+          "name": "x-api-key"
+        }
+      }
+    }
+  }
+  
