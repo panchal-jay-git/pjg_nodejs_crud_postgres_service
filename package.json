@@ -16,7 +16,7 @@
     "url": "git+https://github.com/panchal-jay-git/pjg_nodejs_crud_postgres_service.git"
   },
   "author": "Jay Panchal",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/panchal-jay-git/pjg_nodejs_crud_postgres_service/issues"
   },
